@@ -12,9 +12,9 @@ public class SpoonManager : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate() {
         if(Input.GetKey("up")) {
-            spoonrb.velocity = Vector3.up * 10f;
+            spoonrb.velocity = Vector3.up * 3f;
         } else if(Input.GetKey("down")) {
-            spoonrb.velocity = Vector3.down * 10f;
+            spoonrb.velocity = Vector3.down * 3f;
         } else {
             spoonrb.velocity = new Vector3(0, 0, 0);
         }
