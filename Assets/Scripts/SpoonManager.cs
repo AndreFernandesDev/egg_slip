@@ -39,8 +39,13 @@ public class SpoonManager : MonoBehaviour {
     }
     
     void FixedUpdate() {
-        Vector3 vec = Input.gyro.attitude.eulerAngles;
-        RotateRBToFromVector(spoonrb, new Vector3(-vec.x, 0, -vec.y));
+        Quaternion gyro = Input.gyro.attitude;
+        // Quaternion gyroNormal = new Quaternion(gyro.x, gyro.y, gyro.z, gyro.w);
+        Vector3 gyroVector = gyro.eulerAngles;
+        gyroVector.x += Input.gyro.rotationRateUnbiased.x * Mathf.Rad2Deg * Time.deltaTime;
+        gyroVector.y += Input.gyro.rotationRateUnbiased.y * Mathf.Rad2Deg * Time.deltaTime;
+        //rot.w = 0;
+        RotateRBToFromVector(spoonrb, new Vector3(gyroVector.x, 0, gyroVector.y));
         if(Input.GetKey("up")) {
             RotateRB(spoonrb, new Vector3(150, 0, 0));
         } if(Input.GetKey("down")) {
