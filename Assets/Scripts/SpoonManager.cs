@@ -21,8 +21,11 @@ public class SpoonManager : MonoBehaviour {
         RotateRBTo(rb, Quaternion.Euler(vector));
     }
 
+    Quaternion referenceRotation;
+
     // Start is called before the first frame update
     void Start() {
+        referenceRotation = Quaternion.Inverse( Input.gyro.attitude );
         Debug.Log(SystemInfo.supportsGyroscope);
         Input.gyro.enabled = true;
         Screen.autorotateToLandscapeLeft = false;
@@ -39,8 +42,31 @@ public class SpoonManager : MonoBehaviour {
     }
     
     void FixedUpdate() {
-        Vector3 vec = Input.gyro.attitude.eulerAngles;
-        RotateRBToFromVector(spoonrb, new Vector3(-vec.x, 0, -vec.y));
+        
+        var raw = Input.gyro.attitude;
+        var rot = referenceRotation * raw;
+        var euler = rot.eulerAngles;
+ 
+        var zRot = Quaternion.AngleAxis( euler.z, Vector3.forward );
+ 
+        // reverse the rotation about the z-axis
+        rot = Quaternion.Inverse( zRot ) * rot;
+ 
+        // rotate about the x axis to make the y axis point the right direction
+        rot = Quaternion.AngleAxis( 90, Vector3.right ) * rot;
+ 
+        var up = rot * Vector3.up;
+        var right = rot * Vector3.right;
+        var fwd = rot * Vector3.forward;
+ 
+        /* Debug.DrawRay( transform.position, up, Color.green );
+        Debug.DrawRay( transform.position, right, Color.red );
+        Debug.DrawRay( transform.position, fwd, Color.blue ); */
+ 
+        RotateRBTo(spoonrb, rot);
+        //transform.rotation = rot;
+
+
         if(Input.GetKey("up")) {
             RotateRB(spoonrb, new Vector3(150, 0, 0));
         } if(Input.GetKey("down")) {
