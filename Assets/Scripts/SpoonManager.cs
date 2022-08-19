@@ -35,13 +35,13 @@ public class SpoonManager : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    void FixedUpdate() {
         /*spoonrb.velocity = Vector3.zero;
         spoonrb.angularVelocity = Vector3.zero;*/
         Debug.Log(Input.gyro.attitude);
     }
     
-    void FixedUpdate() {
+    void Update() {
         
         var raw = Input.gyro.attitude;
         var rot = referenceRotation * raw;
@@ -51,18 +51,7 @@ public class SpoonManager : MonoBehaviour {
  
         // reverse the rotation about the z-axis
         rot = Quaternion.Inverse( zRot ) * rot;
- 
-        // rotate about the x axis to make the y axis point the right direction
-        rot = Quaternion.AngleAxis( 90, Vector3.right ) * rot;
- 
-        var up = rot * Vector3.up;
-        var right = rot * Vector3.right;
-        var fwd = rot * Vector3.forward;
- 
-        /* Debug.DrawRay( transform.position, up, Color.green );
-        Debug.DrawRay( transform.position, right, Color.red );
-        Debug.DrawRay( transform.position, fwd, Color.blue ); */
- 
+
         RotateRBTo(spoonrb, rot);
         //transform.rotation = rot;
 
