@@ -52,7 +52,9 @@ public class SpoonManager : MonoBehaviour {
         // reverse the rotation about the z-axis
         rot = Quaternion.Inverse( zRot ) * rot;
 
-        RotateRBTo(spoonrb, rot);
+        Vector3 target = rot.eulerAngles;
+
+        RotateRBToFromVector(spoonrb, new Vector3(-target.x, target.z, -target.y));
         //transform.rotation = rot;
 
 
