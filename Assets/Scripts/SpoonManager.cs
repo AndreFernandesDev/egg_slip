@@ -25,9 +25,9 @@ public class SpoonManager : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        referenceRotation = Quaternion.Inverse( Input.gyro.attitude );
         Debug.Log(SystemInfo.supportsGyroscope);
         Input.gyro.enabled = true;
+        referenceRotation = Quaternion.Inverse( Input.gyro.attitude );
         Screen.autorotateToLandscapeLeft = false;
         Screen.autorotateToLandscapeRight = false;
         Screen.autorotateToPortraitUpsideDown = false;
@@ -38,17 +38,29 @@ public class SpoonManager : MonoBehaviour {
     void FixedUpdate() {
         /*spoonrb.velocity = Vector3.zero;
         spoonrb.angularVelocity = Vector3.zero;*/
-        Debug.Log(Input.gyro.attitude);
+
+    }
+
+    void Calibrate() {
+        referenceRotation = Quaternion.Inverse( Input.gyro.attitude );
     }
     
     void Update() {
-        
+
+        if (referenceRotation.x == 0 &&
+            referenceRotation.x == 0 &&
+            referenceRotation.x == 0 &&
+            referenceRotation.x == 0) {
+            Calibrate();
+
+        }
+
         var raw = Input.gyro.attitude;
         var rot = referenceRotation * raw;
         var euler = rot.eulerAngles;
- 
+
         var zRot = Quaternion.AngleAxis( euler.z, Vector3.forward );
- 
+
         // reverse the rotation about the z-axis
         rot = Quaternion.Inverse( zRot ) * rot;
 
